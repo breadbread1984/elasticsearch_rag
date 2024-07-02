@@ -1,0 +1,7 @@
+langchain
+langchain-community
+absl-py
+elasticsearch
+transformers
+huggingface_hub
+
