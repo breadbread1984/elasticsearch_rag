@@ -4,6 +4,8 @@ from absl import app, flags
 from prompts import elasticsearch_template
 from models import Llama3, CodeLlama, Qwen2, CodeQwen1_5, Qwen1_5
 
+FLAGS = flags.FLAGS
+
 def add_options():
   flags.DEFINE_enum('model', default = 'llama3', enum_values = {'llama3', 'codellama', 'qwen2', 'codeqwen', 'qwen1.5'}, help = 'available models')
   flags.DEFINE_string('host', default = None, help = 'elastic search host')
