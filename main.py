@@ -2,6 +2,8 @@
 
 from absl import app, flags
 from prompts import elasticsearch_template
+from elasticsearch import Elasticsearch
+from langchain.chains.elasticsearch_database import ElasticsearchDatabaseChain
 from models import Llama3, CodeLlama, Qwen2, CodeQwen1_5, Qwen1_5
 
 FLAGS = flags.FLAGS
@@ -22,10 +24,11 @@ def main(unused_argv):
     'qwen2': Qwen2,
     'codeqwen': CodeQwen1_5,
     'qwen1.5': Qwen1_5}[FLAGS.model](FLAGS.locally)
-  chain = elasticsearch_template(tokenizer) | llm
+  db = Elasticsearch(FLAGS.host, basic_auth = (FLAGS.username,FLAGS.password))
+  chain = ElasticsearchDatabaseChain.from_llm(llm = llm, database = db, query_prompt = elasticsearch_template(tokenizer))
   while True:
     query = input('要问什么问题呢？>')
-    response = chain.invoke({'top_k': FLAGS.top_k, 'indices_info': FLAGS.index, 'input': query})
+    response = chain.invoke({'top_k': FLAGS.top_k, 'indices_info': FLAGS.index, 'question': query})
     print(response)
 
 if __name__ == "__main__":

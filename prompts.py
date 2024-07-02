@@ -23,8 +23,8 @@ ESQuery: Elasticsearch Query formatted as json
 
   messages = [
     {'role': 'system', 'content': DEFAULT_DSL_TEMPLATE},
-    {'role': 'user', 'content': PROMPT_SUFFIX}
+    #{'role': 'user', 'content': PROMPT_SUFFIX}
   ]
   prompt = tokenizer.apply_chat_template(messages, tokenize = False, add_generation_prompt = True)
-  template =  PromptTemplate(template = prompt, input_variables = ['top_k', 'indices_info', 'input'])
+  template =  PromptTemplate(template = prompt, input_variables = ['top_k',])
   return template
