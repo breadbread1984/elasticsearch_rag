@@ -13,7 +13,7 @@ def add_options():
   flags.DEFINE_integer('top_k', default = 3, help = 'topk')
   flags.DEFINE_boolean('locally', default = False, help = 'whether to run locally')
 
-def main():
+def main(unused_argv):
   tokenizer, llm = {
     'llama3': Llama3,
     'codellama': CodeLlama,
