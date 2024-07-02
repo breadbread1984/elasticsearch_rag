@@ -24,8 +24,10 @@ def main(unused_argv):
     'qwen2': Qwen2,
     'codeqwen': CodeQwen1_5,
     'qwen1.5': Qwen1_5}[FLAGS.model](FLAGS.locally)
-  db = Elasticsearch(FLAGS.host, basic_auth = (FLAGS.username,FLAGS.password))
-  chain = ElasticsearchDatabaseChain.from_llm(llm = llm, database = db, query_prompt = elasticsearch_template(tokenizer))
+  host_with_authentication = FLAGS.host[:FLAGS.host.find('://') + 3] + FLAGS.username + ":" + FLAGS.password + "@" + FLAGS.host[FLAGS.host.find('://') + 3:]
+  print(host_with_authentication)
+  db = Elasticsearch(host_with_authentication)
+  chain = ElasticsearchDatabaseChain.from_llm(llm = llm, database = db, query_prompt = elasticsearch_template(tokenizer), verbose = True)
   while True:
     query = input('要问什么问题呢？>')
     response = chain.invoke({'top_k': FLAGS.top_k, 'indices_info': FLAGS.index, 'question': query})
