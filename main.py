@@ -31,6 +31,7 @@ def main(unused_argv):
                                               database = db,
                                               query_prompt = query_template(tokenizer),
                                               answer_prompt = answer_template(tokenizer),
+                                              return_intermediate_steps = True,
                                               verbose = True)
   while True:
     query = input('要问什么问题呢？>')
