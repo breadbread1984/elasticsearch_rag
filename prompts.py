@@ -2,7 +2,7 @@
 
 from langchain_core.prompts.prompt import PromptTemplate
 
-def elasticsearch_template(tokenizer):
+def query_template(tokenizer):
   PROMPT_SUFFIX = """Only use the following Elasticsearch indices:
 {indices_info}
 
@@ -22,9 +22,28 @@ ESQuery: Elasticsearch Query formatted as json
 """
 
   messages = [
-    {'role': 'system', 'content': DEFAULT_DSL_TEMPLATE},
-    #{'role': 'user', 'content': PROMPT_SUFFIX}
+    {'role': 'user', 'content': DEFAULT_DSL_TEMPLATE + PROMPT_SUFFIX}
   ]
   prompt = tokenizer.apply_chat_template(messages, tokenize = False, add_generation_prompt = True)
-  template =  PromptTemplate(template = prompt, input_variables = ['top_k',])
+  template =  PromptTemplate(template = prompt, input_variables = ['indices_info', 'input', 'top_k'])
+  return template
+
+def answer_template(tokenizer):
+  DEFAULT_ANSWER_TEMPLATE = """Given an input question and relevant data from a database, answer the user question.
+
+Use the following format:
+
+Question: Question here
+Data: Relevant data here
+Answer: Final answer here
+
+Question: {input}
+Data: {data}
+Answer:"""
+
+  messages = [
+    {'role': 'user', 'content': DEFAULT_ANSWER_TEMPLATE}
+  ]
+  prompt = tokenizer.apply_chat_template(messages, tokenize = False, add_generation_prompt = True)
+  template = PromptTemplate(template = prompt, input_variables = ['input', 'data'])
   return template
