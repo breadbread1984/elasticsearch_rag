@@ -9,7 +9,7 @@ from models import Llama3, CodeLlama, Qwen2, Qwen2_TP, CodeQwen1_5, Qwen1_5
 FLAGS = flags.FLAGS
 
 def add_options():
-  flags.DEFINE_enum('model', default = 'llama3', enum_values = {'llama3', 'codellama', 'qwen2', 'qwen2_tp', 'codeqwen', 'qwen1.5'}, help = 'available models')
+  flags.DEFINE_enum('model', default = 'qwen2', enum_values = {'llama3', 'codellama', 'qwen2', 'qwen2_tp', 'codeqwen', 'qwen1.5'}, help = 'available models')
   flags.DEFINE_string('host', default = None, help = 'elastic search host')
   flags.DEFINE_string('index', default = 'qd_asset', help = 'index')
   flags.DEFINE_string('username', default = 'elastic', help = 'username')
