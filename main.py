@@ -30,6 +30,7 @@ def main(unused_argv):
   db = Elasticsearch(host_with_authentication)
   chain = ElasticsearchDatabaseChain.from_llm(llm = llm,
                                               database = db,
+                                              include_indices = ['qd_asset'],
                                               query_prompt = query_template(tokenizer),
                                               answer_prompt = answer_template(tokenizer),
                                               return_intermediate_steps = True,
