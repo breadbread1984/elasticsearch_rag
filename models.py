@@ -80,6 +80,7 @@ def Qwen2(locally = False):
         "torch_dtype": "bfloat16",
         "transformers_version": "4.41.2",
         "use_cache": True,
+        "max_length": 131072,
         "temperature": 0.8,
         "top_p": 0.8,
         "use_cache": True,
