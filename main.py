@@ -34,7 +34,7 @@ def main(unused_argv):
                                               verbose = True)
   while True:
     query = input('要问什么问题呢？>')
-    response = chain.invoke({'top_k': FLAGS.top_k, 'indices_info': FLAGS.index, 'question': query})
+    response = chain.invoke({'question': query})
     print(response)
 
 if __name__ == "__main__":
