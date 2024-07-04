@@ -99,8 +99,11 @@ def Qwen2(locally = False):
   return tokenizer, llm
 
 def Qwen2_TP(locally = False, tp_num = 2):
+  assert locally == True, "vllm can only run locally!"
   login(token = config.huggingface_token)
   tokenizer = AutoTokenizer.from_pretrained('Qwen/Qwen2-7B-Instruct')
+  llm = VLLM(model = "Qwen/Qwen2-7B-Instruct", tensor_parallel_size = tp_num, trust_remote_code = True)
+  return tokenizer, llm
 
 def CodeQwen1_5(locally = False):
   login(token = config.huggingface_token)
