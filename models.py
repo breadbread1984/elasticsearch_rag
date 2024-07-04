@@ -5,6 +5,7 @@ from huggingface_hub import login
 from transformers import AutoTokenizer
 from langchain_community.llms import HuggingFaceEndpoint
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
+from langchain_community.llms import VLLM
 import config
 
 def Llama3(locally = False):
@@ -74,7 +75,10 @@ def Qwen2(locally = False):
       task = 'text-generation',
       device = 0,
       pipeline_kwargs = {
-        "max_length": 131072,
+        "sliding_window": 131072,
+        "rope_theta": 1000000.0,
+        "torch_dtype": "bfloat16",
+        "max_length": 32768,
         "do_sample": True,
         "temperature": 0.8,
         "top_p": 0.8,
@@ -92,6 +96,10 @@ def Qwen2(locally = False):
       top_p = 0.8,
     )
   return tokenizer, llm
+
+def Qwen2_TP(locally = False, tp_num = 2):
+  login(token = config.huggingface_token)
+  tokenizer = AutoTokenizer.from_pretrained('Qwen/Qwen2-7B-Instruct')
 
 def CodeQwen1_5(locally = False):
   login(token = config.huggingface_token)
