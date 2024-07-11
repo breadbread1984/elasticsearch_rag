@@ -26,7 +26,7 @@ def main(unused_argv):
   hits = res['hits']['hits']
 
   embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
-  vectordb = Chroma(embedding = embeddings, persist_directory = 'db')
+  vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
   while len(hits) > 0:
     texts = [hit['资产详细信息'] for hit in hits]
     metadatas = [{'_id': hit['_id'] for hit in hits}]
