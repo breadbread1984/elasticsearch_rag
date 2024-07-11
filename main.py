@@ -2,8 +2,9 @@
 
 from absl import app, flags
 from prompts import query_template, answer_template
+from langchain.vectorstores import Chroma
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from elasticsearch import Elasticsearch
-from langchain.chains.elasticsearch_database import ElasticsearchDatabaseChain
 from models import Llama3, CodeLlama, Qwen2, Qwen2_TP, CodeQwen1_5, Qwen1_5
 
 FLAGS = flags.FLAGS
@@ -26,19 +27,13 @@ def main(unused_argv):
     'codeqwen': CodeQwen1_5,
     'qwen1.5': Qwen1_5}[FLAGS.model](FLAGS.locally)
   host_with_authentication = FLAGS.host[:FLAGS.host.find('://') + 3] + FLAGS.username + ":" + FLAGS.password + "@" + FLAGS.host[FLAGS.host.find('://') + 3:]
-  print(host_with_authentication)
-  db = Elasticsearch(host_with_authentication)
-  chain = ElasticsearchDatabaseChain.from_llm(llm = llm,
-                                              database = db,
-                                              include_indices = ['qd_asset'],
-                                              query_prompt = query_template(tokenizer),
-                                              answer_prompt = answer_template(tokenizer),
-                                              return_intermediate_steps = False,
-                                              verbose = True)
+  embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+  vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
+  retriever = vectordb.as_retriever()
   while True:
     query = input('要问什么问题呢？>')
-    response = chain.invoke({'question': query})
-    print(response)
+    docs = retriever.get_relevant_documents(query)
+    print(docs)
 
 if __name__ == "__main__":
   add_options()
