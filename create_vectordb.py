@@ -12,6 +12,7 @@ def add_options():
   flags.DEFINE_string('index', default = 'qd_asset', help = 'index')
   flags.DEFINE_string('username', default = 'elastic', help = 'username')
   flags.DEFINE_string('password', default = None, help = 'password')
+  flags.DEFINE_integer('total', default = None, help = 'total records')
 
 def main(unused_argv):
   host_with_authentication = FLAGS.host[:FLAGS.host.find('://') + 3] + FLAGS.username + ":" + FLAGS.password + "@" + FLAGS.host[FLAGS.host.find('://') + 3:]
@@ -27,6 +28,7 @@ def main(unused_argv):
 
   embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
   vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
+  count = 0
   while len(hits) > 0:
     texts = [hit['_source']['资产详细信息'] for hit in hits]
     metadatas = [{'_id': hit['_id']} for hit in hits]
@@ -36,6 +38,8 @@ def main(unused_argv):
     res = es.scroll(scroll_id = scroll_id, scroll = "1m")
     scroll_id = res['_scroll_id']
     hits = res['hits']['hits']
+    count += len(hits)
+    if FLAGS.total is not None and count >= FLAGS.total: break
 
   es.clear_scroll(scroll_id = scroll_id)
 
