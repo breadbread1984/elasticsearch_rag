@@ -35,7 +35,7 @@ def main(unused_argv):
     query = input('要问什么问题呢？>')
     docs = retriever.get_relevant_documents(query)
     ids = {doc.metadata['_id'] for doc in docs}
-    res = es.search(index = FLAGS.index, scroll = '1m', size = 10, body = {"query": "terms": {"_id": list(ids)}})
+    res = es.search(index = FLAGS.index, scroll = '1m', size = 10, body = {"query": {"terms": {"_id": list(ids)}}})
     print(res)
 
 if __name__ == "__main__":
