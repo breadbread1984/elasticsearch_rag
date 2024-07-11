@@ -30,10 +30,10 @@ def main(unused_argv):
   vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
   count = 0
   while len(hits) > 0:
-    texts = [hit['_source']['资产详细信息'] for hit in hits]
+    texts = [hit['_source']['资产详细信息'] for hit in hits if '资产详细信息' in hit['_source']]
     metadatas = [{'_id': hit['_id']} for hit in hits]
     vectordb.add_texts(texts = texts, metadatas = metadatas)
-    texts = [hit['_source']['对应字段信息'] for hit in hits]
+    texts = [hit['_source']['对应字段信息'] for hit in hits if '对应字段信息' in hit['_source']]
     vectordb.add_texts(texts = texts, metadatas = metadatas)
     res = es.scroll(scroll_id = scroll_id, scroll = "1m")
     scroll_id = res['_scroll_id']
