@@ -4,4 +4,4 @@ absl-py
 elasticsearch
 transformers
 huggingface_hub
-
+json-repair
