@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from absl import flags, app
-from json_repair
+import json_repair
 from elasticsearch import Elasticsearch
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
