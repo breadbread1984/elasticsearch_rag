@@ -36,13 +36,13 @@ def main(unused_argv):
       _id = {'_id': hit['_id']}
       if '资产详细信息' in hit['_source']:
         detail = eval(hit['_source']['资产详细信息'])
-        for k, v in detail.items():
-          texts.append('%s:%s' % (k,v))
+        for _, v in detail.items():
+          texts.append(v)
           metadatas.append(_id)
       if '对应字段信息' in hit['_source']:
         domain = eval(hit['_source']['对应字段信息'])
-        for k, v in detail.items():
-          texts.append('%s:%s' % (k,v))
+        for _, v in detail.items():
+          texts.append(v)
           metadatas.append(_id)
     vectordb.add_texts(texts = texts, metadatas = metadatas)
     texts = [hit['_source']['对应字段信息'] for hit in hits if '对应字段信息' in hit['_source']]
