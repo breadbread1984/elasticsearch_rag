@@ -27,13 +27,16 @@ def main(unused_argv):
     'codeqwen': CodeQwen1_5,
     'qwen1.5': Qwen1_5}[FLAGS.model](FLAGS.locally)
   host_with_authentication = FLAGS.host[:FLAGS.host.find('://') + 3] + FLAGS.username + ":" + FLAGS.password + "@" + FLAGS.host[FLAGS.host.find('://') + 3:]
+  es = Elasticsearch(host_with_authentication)
   embeddings = HuggingFaceEmbeddings(model_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
   vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
   retriever = vectordb.as_retriever()
   while True:
     query = input('要问什么问题呢？>')
     docs = retriever.get_relevant_documents(query)
-    print(docs)
+    ids = {doc.metadata['_id'] for doc in docs}
+    res = es.search(index = FLAGS.index, scroll = '1m', size = 10, body = {"query": "terms": {"_id": list(ids)}})
+    print(res)
 
 if __name__ == "__main__":
   add_options()
