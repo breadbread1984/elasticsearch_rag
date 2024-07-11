@@ -10,14 +10,20 @@ this repo implement QA system interactive with elasticsearch database
 python3 -m pip install -r requirements.txt
 ```
 
+## Create index
+
+```shell
+python3 create_vectordb.py --host <host> --username <username> --password <password>
+```
+
 ## Run QA system
 
 ```shell
-python3 main.py --model (llama3|codellama|qwen2|codeqwen|qwen1.5) --host <host> --username <username> --password <password> [--top_k <number of matches>] [--locally]
+python3 main.py --host <host> --username <username> --password <password>
 ```
 
 ## Example
 
 ```shell
-CUDA_VISIBLE_DEVICES=0 python3 main.py --host http://es8.shuidata.cn:88 --password ***** --model qwen2 --locally
+CUDA_VISIBLE_DEVICES=0 python3 main.py --host http://es8.shuidata.cn:88 --password *****
 ```
