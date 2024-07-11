@@ -29,7 +29,9 @@ def main(unused_argv):
   vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
   while len(hits) > 0:
     texts = [hit['_source']['资产详细信息'] for hit in hits]
-    metadatas = [{'_id': hit['_id'] for hit in hits}]
+    metadatas = [{'_id': hit['_id']} for hit in hits]
+    vectordb.add_texts(texts = texts, metadatas = metadatas)
+    texts = [hit['_source']['对应字段信息'] for hit in hits]
     vectordb.add_texts(texts = texts, metadatas = metadatas)
     res = es.scroll(scroll_id = scroll_id, scroll = "1m")
     scroll_id = res['_scroll_id']
