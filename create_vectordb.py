@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from absl import flags, app
+from json_repair
 from elasticsearch import Elasticsearch
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
@@ -35,12 +36,12 @@ def main(unused_argv):
       metadatas = list()
       _id = {'_id': hit['_id']}
       if '资产详细信息' in hit['_source']:
-        detail = eval(hit['_source']['资产详细信息'])
+        detail = json_repair.loads(hit['_source']['资产详细信息'])
         for k, v in detail.items():
           texts.append('%s:%s' % (k,v))
           metadatas.append(_id)
       if '对应字段信息' in hit['_source']:
-        domain = eval(hit['_source']['对应字段信息'])
+        domain = json_repair.loads(hit['_source']['对应字段信息'])
         for k, v in detail.items():
           texts.append('%s:%s' % (k,v))
           metadatas.append(_id)
