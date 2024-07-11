@@ -30,8 +30,20 @@ def main(unused_argv):
   vectordb = Chroma(embedding_function = embeddings, persist_directory = 'db')
   count = 0
   while len(hits) > 0:
-    texts = [hit['_source']['资产详细信息'] for hit in hits if '资产详细信息' in hit['_source']]
-    metadatas = [{'_id': hit['_id']} for hit in hits if '资产详细信息' in hit['_source']]
+    for hit in hits:
+      texts = list()
+      metadatas = list()
+      _id = {'_id': hit['_id']}
+      if '资产详细信息' in hit['_source']:
+        detail = eval(hit['_source']['资产详细信息'])
+        for k, v in detail.items():
+          texts.append('%s:%s' % (k,v))
+          metadatas.append(_id)
+      if '对应字段信息' in hit['_source']:
+        domain = eval(hit['_source']['对应字段信息'])
+        for k, v in detail.items():
+          texts.append('%s:%s' % (k,v))
+          metadatas.append(_id)
     vectordb.add_texts(texts = texts, metadatas = metadatas)
     texts = [hit['_source']['对应字段信息'] for hit in hits if '对应字段信息' in hit['_source']]
     metadatas = [{'_id': hit['_id']} for hit in hits if '对应字段信息' in hit['_source']]
