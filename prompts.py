@@ -3,7 +3,7 @@
 from langchain_core.prompts.prompt import PromptTemplate
 
 def rephrase_template(tokenizer):
-  system_message = """Given a sentence, please rephrase it to a canonical expression form"""
+  system_message = """Given a sentence, please rephrase it to a canonical expression form in the same language"""
   messages = [
     {"role": "system", "content": system_message},
     {"role": "user", "content": "{context}"}
